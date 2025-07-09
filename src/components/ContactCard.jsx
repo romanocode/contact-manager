@@ -48,7 +48,7 @@ export default function ContactCard({contact, toggleFavorite}) {
           </div>
         </div>
 
-        <button onClick={() => toggleFavorite(contact.id)}>
+        <button className='favorite-btn' onClick={() => toggleFavorite(contact.id)}>
           {contact.isFavorite ? "remove favorite" : "Add Favorite"}
         </button>
       </div>
@@ -125,6 +125,24 @@ export default function ContactCard({contact, toggleFavorite}) {
           transform: scale(1.1);
         }
 
+        .favorite-btn {
+  background-color: transparent;
+  border: 1px solid #00cc8f;
+  color: #00cc8f;
+  font-size: 0.75rem;
+  padding: 6px 10px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 15px;
+}
+
+.favorite-btn:hover {
+  background-color: #00cc8f;
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 5px rgba(0, 204, 143, 0.2);
+}
         .card-content {
           padding: 30px 20px 20px;
         }

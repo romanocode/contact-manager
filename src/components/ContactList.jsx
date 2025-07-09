@@ -1,7 +1,6 @@
-
 import ContactCard from './ContactCard';
 
-export default function ContactList({contact, toggleFavorite}) {
+export default function ContactList({ contacts, toggleFavorite }) {
   return (
     <div style={{
       display: 'flex',
@@ -10,8 +9,9 @@ export default function ContactList({contact, toggleFavorite}) {
       gap: '1.5rem',
       padding: '2rem'
     }}>
-      <ContactCard contact = {contact} toggleFavorite={toggleFavorite} />
-     
+      {contacts.map(contact => (
+        <ContactCard key={contact.id} contact={contact} toggleFavorite={toggleFavorite} />
+      ))}
     </div>
   );
 }
