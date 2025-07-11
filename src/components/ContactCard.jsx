@@ -26,12 +26,9 @@ export default function ContactCard({contact, toggleFavorite}) {
           <button onClick={handleDelete} className="delete-btn">🗑️</button>
         </div>
 
-        <span>{contact?.isFavorite ? '⭐' : '☆'}</span>
-        
+        <span className="favorite-star">{contact?.isFavorite ? '⭐' : '☆'}</span>
       </div>
 
-      
-      
       {/* Información del contacto */}
       <div className="card-content">
         <h3 className="contact-name">{contact.name}</h3>
@@ -49,21 +46,25 @@ export default function ContactCard({contact, toggleFavorite}) {
         </div>
 
         <button className='favorite-btn' onClick={() => toggleFavorite(contact.id)}>
-          {contact.isFavorite ? "remove favorite" : "Add Favorite"}
+          {contact.isFavorite ? "Remove Favorite" : "Add Favorite"}
         </button>
       </div>
 
       {/* Estilos CSS dentro del componente */}
       <style jsx>{`
         .contact-card {
-        
           background: white;
           border-radius: 15px;
           box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+          width: 300px;
+          min-width: 280px;
           max-width: 300px;
-          margin: 20px;
+          margin: 10px;
           overflow: hidden;
           transition: transform 0.3s ease;
+          position: relative;
+          display: flex;
+          flex-direction: column;
         }
 
         .contact-card:hover {
@@ -78,7 +79,8 @@ export default function ContactCard({contact, toggleFavorite}) {
           display: flex;
           justify-content: space-between;
           align-items: flex-start;
-          padding: 5px;
+          padding: 10px;
+          flex-shrink: 0;
         }
 
         .avatar {
@@ -94,6 +96,13 @@ export default function ContactCard({contact, toggleFavorite}) {
           bottom: -25px;
           left: 20px;
           box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+          z-index: 2;
+        }
+
+        .favorite-star {
+          font-size: 20px;
+          color: white;
+          z-index: 1;
         }
 
         .action-buttons {
@@ -101,13 +110,12 @@ export default function ContactCard({contact, toggleFavorite}) {
           gap: 8px;
           opacity: 0;
           transition: opacity 0.3s ease;
+          z-index: 1;
         }
 
         .contact-card:hover .action-buttons {
           opacity: 1;
         }
-
-        
 
         .edit-btn, .delete-btn {
           background: rgba(255, 255, 255, 0.9);
@@ -125,33 +133,18 @@ export default function ContactCard({contact, toggleFavorite}) {
           transform: scale(1.1);
         }
 
-        .favorite-btn {
-  background-color: transparent;
-  border: 1px solid #00cc8f;
-  color: #00cc8f;
-  font-size: 0.75rem;
-  padding: 6px 10px;
-  border-radius: 20px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  margin-top: 15px;
-}
-
-.favorite-btn:hover {
-  background-color: #00cc8f;
-  color: white;
-  transform: translateY(-1px);
-  box-shadow: 0 2px 5px rgba(0, 204, 143, 0.2);
-}
         .card-content {
-          padding: 30px 20px 20px;
+          padding: 35px 20px 20px;
+          flex: 1;
+          display: flex;
+          flex-direction: column;
         }
 
         .contact-name {
           color: #333;
           font-size: 22px;
           font-weight: bold;
-          margin-bottom: 20px;
+          margin: 0 0 20px 0;
           text-transform: capitalize;
         }
 
@@ -159,6 +152,7 @@ export default function ContactCard({contact, toggleFavorite}) {
           display: flex;
           flex-direction: column;
           gap: 12px;
+          margin-bottom: 20px;
         }
 
         .info-item {
@@ -176,14 +170,44 @@ export default function ContactCard({contact, toggleFavorite}) {
           align-items: center;
           justify-content: center;
           font-size: 16px;
+          flex-shrink: 0;
         }
 
         .text {
           color: #666;
           font-size: 14px;
           font-weight: 500;
+          word-break: break-word;
+        }
+
+        .favorite-btn {
+          background-color: transparent;
+          border: 1px solid #00cc8f;
+          color: #00cc8f;
+          font-size: 0.75rem;
+          padding: 8px 16px;
+          border-radius: 20px;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          margin-top: auto;
+          align-self: flex-start;
+        }
+
+        .favorite-btn:hover {
+          background-color: #00cc8f;
+          color: white;
+          transform: translateY(-1px);
+          box-shadow: 0 2px 5px rgba(0, 204, 143, 0.2);
+        }
+
+        @media (max-width: 600px) {
+          .contact-card {
+            width: 100%;
+            max-width: 100%;
+            margin: 10px 0;
+          }
         }
       `}</style>
     </div>
   );
-};
+}
