@@ -130,41 +130,13 @@ export default function App() {
           </div>
         </section>
 
-        <section>
-          {contacts.map((contact) => (
-            <div key={contact.id}>
-              <button onClick={() => handleSelectContact(contact)}>
-                Contact {contact.id}
-              </button>
-            </div>
-          ))}
-        </section>
+        <ContactList
+          contactsToShow={contactsToShow}
+          toggleFavorite={toggleFavorite}
+          handleSelectContact={handleSelectContact}
+        />
 
-        <style jsx>{`
-          section {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 1rem;
-            padding: 2rem 1rem;
-          }
-
-          section div {
-            display: flex;
-            justify-content: center;
-          }
-
-          section button {
-            border: none;
-            padding: 0.75rem 1.5rem;
-            border-radius: 0.5rem;
-            font-size: 0.95rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.3s ease, transform 0.2s ease;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-          }
-
+        <style >{`
           .favorites-filter {
             display: flex;
             flex-direction: column;
@@ -175,6 +147,13 @@ export default function App() {
             border-radius: 10px;
             margin-top: 1rem;
             text-align: center;
+          }
+
+          .favorites-filter label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
           }
 
           .favorites-filter input[type="checkbox"] {
@@ -192,6 +171,26 @@ export default function App() {
             border-radius: 10px;
             font-weight: 600;
             box-shadow: 0 2px 4px rgba(0, 204, 143, 0.1);
+          }
+
+          .button-group {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+          }
+
+          .btn-fav-all,
+          .btn-reset-all {
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            min-width: 200px;
           }
 
           .btn-fav-all {
@@ -216,19 +215,8 @@ export default function App() {
             box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3);
           }
 
-          .button-group {
-            display: flex;
-            gap: 1rem;
-            flex-wrap: wrap;
-            justify-content: center;
-          }
-
-          section button {
-            min-width: 200px;
-          }
-
           @media (max-width: 600px) {
-            section {
+            .favorites-filter {
               flex-direction: column;
               align-items: center;
             }
@@ -238,17 +226,13 @@ export default function App() {
               gap: 0.5rem;
             }
 
-            section button {
+            .btn-fav-all,
+            .btn-reset-all {
               width: 100%;
             }
           }
         `}</style>
       </main>
-
-      <ContactList
-        contacts={contactsToShow}
-        toggleFavorite={toggleFavorite}
-      />
 
       <Footer />
     </div>
