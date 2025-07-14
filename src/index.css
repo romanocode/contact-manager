@@ -1,0 +1,163 @@
+.favorites-filter {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1.5rem 2rem;
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            margin-top: 1rem;
+            text-align: center;
+          }
+
+          .contact-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            padding: 2rem 1rem;
+          }
+
+          .contact-item {
+            display: flex;
+            justify-content: center;
+          }
+
+          .contact-btn {
+            background-color: #00cc8f;
+            color: rgb(8, 64, 47);
+            border: none;
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: background 0.3s ease, transform 0.2s ease;
+          }
+
+          .contact-btn:hover {
+            background-color: #009f71;
+            transform: translateY(-2px);
+          }
+
+          .selected-contact-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem;
+            gap: 1rem;
+          }
+
+          .back-button {
+            background-color:rgb(255, 79, 59);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+          }
+
+          .back-button:hover {
+            background-color: #00b37a;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 204, 143, 0.3);
+          }
+
+          .favorites-filter label {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 0.5rem;
+          }
+
+          .favorites-filter input[type="checkbox"] {
+            margin-right: 0.5rem;
+            accent-color: #00cc8f;
+            width: 16px;
+            height: 16px;
+          }
+
+          .contact-count {
+            font-size: 0.9rem;
+            color: #333;
+            background: #e6fffa;
+            padding: 6px 12px;
+            border-radius: 10px;
+            font-weight: 600;
+            box-shadow: 0 2px 4px rgba(0, 204, 143, 0.1);
+          }
+
+          .button-group {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+          }
+
+          .btn-fav-all,
+          .btn-reset-all {
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            min-width: 200px;
+          }
+
+          .btn-fav-all {
+            background-color: #00cc8f;
+            color: white;
+          }
+
+          .btn-fav-all:hover {
+            background-color: #00b37a;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 204, 143, 0.3);
+          }
+
+          .btn-reset-all {
+            background-color: #ef4444;
+            color: white;
+          }
+
+          .btn-reset-all:hover {
+            background-color: #dc2626;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3);
+          }
+
+          .no-contact-message {
+            color: #e53935; 
+            font-weight: bold;
+            text-align: center;
+            margin-top: 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+          }
+
+          @media (max-width: 600px) {
+            .favorites-filter {
+              flex-direction: column;
+              align-items: center;
+            }
+
+            .button-group {
+              flex-direction: column;
+              gap: 0.5rem;
+            }
+
+            .btn-fav-all,
+            .btn-reset-all {
+              width: 100%;
+            }
+          }
