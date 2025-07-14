@@ -9,6 +9,10 @@ Una aplicación básica hecha en React para practicar estados (`useState`), mane
 - Contador: muestra cuántos contactos visibles hay
 - Botón "Marcar todos como favoritos"
 - Botón "Resetear todos los favoritos"
+- Boton "Siguiente contacto"
+- Mostrar solo las primeras 3 tarjetas de contactos
+- Mostrar solo la tarjeta por contacto seleccionado
+- Boton de limpiar
 
 ## 🧑‍💻 Tecnologías
 

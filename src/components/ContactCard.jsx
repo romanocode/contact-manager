@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function ContactCard({contact, toggleFavorite}) {
+export default function ContactCard({contact, toggleFavorite, handleNextContact}) {
   
   // Función para manejar clic en editar
   const handleEdit = () => {
@@ -45,9 +45,15 @@ export default function ContactCard({contact, toggleFavorite}) {
           </div>
         </div>
 
+            <div className="button-row">
         <button className='favorite-btn' onClick={() => toggleFavorite(contact.id)}>
           {contact.isFavorite ? "Remove Favorite" : "Add Favorite"}
         </button>
+
+        <button className="next-button" onClick={() => handleNextContact(contact)}>
+          Siguiente
+        </button>
+      </div>
       </div>
 
       {/* Estilos CSS dentro del componente */}
@@ -104,6 +110,27 @@ export default function ContactCard({contact, toggleFavorite}) {
           color: white;
           z-index: 1;
         }
+
+          .button-row {
+              display: flex;
+              gap: 10px;
+              margin-top: auto;
+            }
+
+            .next-button {
+            background-color: #00cc8f;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 8px 16px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+          }
+
+          .next-button:hover {
+            background-color: #00b17a;
+          }
 
         .action-buttons {
           display: flex;
