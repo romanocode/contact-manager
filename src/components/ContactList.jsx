@@ -1,11 +1,15 @@
 import ContactCard from './ContactCard';
 
-export default function ContactList({ contactsToShow, toggleFavorite, handleSelectContact }) {
+export default function ContactList({ contactsToShow, toggleFavorite, handleSelectContact, onDeleteContact }) {
   return (
     <section className="contact-list-container">
       {contactsToShow.map((contact) => (
         <div key={contact.id} className="contact-item" onClick={() => handleSelectContact(contact)}>
-          <ContactCard contact={contact} toggleFavorite={toggleFavorite} />
+          <ContactCard 
+            contact={contact} 
+            toggleFavorite={toggleFavorite}
+            onDeleteContact={onDeleteContact}
+          />
         </div>
       ))}
 
@@ -42,4 +46,3 @@ export default function ContactList({ contactsToShow, toggleFavorite, handleSele
     </section>
   );
 }
-

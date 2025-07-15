@@ -1,16 +1,21 @@
 import React from 'react';
 
-export default function ContactCard({contact, toggleFavorite, handleNextContact}) {
+export default function ContactCard({contact, toggleFavorite, handleNextContact, onDeleteContact}) {
   
   // Función para manejar clic en editar
   const handleEdit = () => {
     alert(`Editando contacto: ${contact.name}`);
   };
 
-  // Función para manejar clic en eliminar
+  // Función para manejar clic en eliminar - ACTUALIZADA
   const handleDelete = () => {
-    if (window.confirm(`¿Estás seguro de eliminar a ${contact.name}?`)) {
-      alert(`Contacto ${contact.name} eliminado`);
+    if (onDeleteContact) {
+      onDeleteContact(contact.id, contact.name);
+    } else {
+      // Fallback si no se pasa la función
+      if (window.confirm(`¿Estás seguro de eliminar a ${contact.name}?`)) {
+        alert(`Contacto ${contact.name} eliminado`);
+      }
     }
   };
 
@@ -22,7 +27,6 @@ export default function ContactCard({contact, toggleFavorite, handleNextContact}
         
         {/* Botones de acción */}
         <div className="action-buttons">
-          <button onClick={handleEdit} className="edit-btn">✏️</button>
           <button onClick={handleDelete} className="delete-btn">🗑️</button>
         </div>
 
@@ -50,9 +54,11 @@ export default function ContactCard({contact, toggleFavorite, handleNextContact}
           {contact.isFavorite ? "Remove Favorite" : "Add Favorite"}
         </button>
 
-        <button className="next-button" onClick={() => handleNextContact(contact)}>
-          Siguiente
-        </button>
+        {handleNextContact && (
+          <button className="next-button" onClick={() => handleNextContact(contact)}>
+            Siguiente
+          </button>
+        )}
       </div>
       </div>
 
@@ -155,8 +161,13 @@ export default function ContactCard({contact, toggleFavorite, handleNextContact}
           transition: all 0.2s ease;
         }
 
-        .edit-btn:hover, .delete-btn:hover {
+        .edit-btn:hover {
           background: white;
+          transform: scale(1.1);
+        }
+
+        .delete-btn:hover {
+          background: #ffebee;
           transform: scale(1.1);
         }
 

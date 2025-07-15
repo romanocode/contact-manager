@@ -1,4 +1,5 @@
 import { useState } from "react";
+import ContactForm from "./components/ContactForm";
 import ContactCard from "./components/ContactCard";
 import ContactList from "./components/ContactList";
 import Footer from "./components/Footer";
@@ -10,6 +11,8 @@ import "./index.css"
 export default function App() {
   const [selectedContact, setSelectedContact] = useState(null);
   const [showOnlyFavorites, setShowOnlyFavorites] = useState(false);
+
+  
 
   const [contacts, setContacts] = useState([
     {
@@ -124,10 +127,39 @@ export default function App() {
     }
   };
 
+  function handleAddContact(newContact) {
+    const updatedContacts = [...contacts, newContact]; // Spread operator
+    setContacts(updatedContacts);
+  }
+
+  const handleDeleteContact = (contactId) => {
+  const updatedContacts = contacts.filter(contact => contact.id !== contactId);
+  setContacts(updatedContacts);
+  
+  // Si el contacto eliminado es el que está seleccionado, limpiamos la selección
+  if (selectedContact && selectedContact.id === contactId) {
+    setSelectedContact(null);
+  }
+};
+
+// Función con confirmación (opcional, más segura)
+const handleDeleteWithConfirmation = (contactId, contactName) => {
+  const confirmDelete = window.confirm(`¿Estás seguro de que quieres eliminar a ${contactName}?`);
+  
+  if (confirmDelete) {
+    handleDeleteContact(contactId);
+  }
+};
+  
+
   return (
     <div>
       <Header />
       <main>
+
+        <ContactForm onAddContact={handleAddContact} />
+    
+
         <section className="favorites-filter">
           <label>
             <h3>Favorite Contacts</h3>
@@ -162,7 +194,7 @@ export default function App() {
                 onClick={() => handleSelectContact(contact)}
                 className="contact-btn"
               >
-                {contact.name} ({contact.id})
+                {contact.name}
               </button>
             </div>
           ))}
@@ -181,6 +213,7 @@ export default function App() {
               contact={selectedContact}
               toggleFavorite={toggleFavorite}
               handleNextContact={handleNextContact}
+              onDeleteContact={handleDeleteWithConfirmation}
             />
           </div>
         ) : (
@@ -188,6 +221,7 @@ export default function App() {
             contactsToShow={showOnlyFavorites ? contactsToShow : contactsToShow.slice(0, 3)}
             toggleFavorite={toggleFavorite}
             onSelectContact={handleSelectContact}
+            onDeleteContact={handleDeleteWithConfirmation}
         />
         )}
 

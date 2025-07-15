@@ -13,6 +13,9 @@ Una aplicación básica hecha en React para practicar estados (`useState`), mane
 - Mostrar solo las primeras 3 tarjetas de contactos
 - Mostrar solo la tarjeta por contacto seleccionado
 - Boton de limpiar
+- Formulario para agregar nuevo contacto
+- validaciones del formulario
+- boton de eliminar contacto
 
 ## 🧑‍💻 Tecnologías
 
