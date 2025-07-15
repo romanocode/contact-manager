@@ -56,7 +56,7 @@ export default function ContactCard({contact, toggleFavorite, handleNextContact,
 
         {handleNextContact && (
           <button className="next-button" onClick={() => handleNextContact(contact)}>
-            Siguiente
+            Next
           </button>
         )}
       </div>

@@ -168,7 +168,7 @@ const handleDeleteWithConfirmation = (contactId, contactName) => {
               checked={showOnlyFavorites}
               onChange={handleChangeFavorite}
             />
-            Mostrar solo favoritos
+            Show all favorites
           </label>
 
           <span className="contact-count">
@@ -177,11 +177,11 @@ const handleDeleteWithConfirmation = (contactId, contactName) => {
 
           <div className="button-group">
             <button className="btn-fav-all" onClick={markAllAsFavorites}>
-              Marcar todos como favoritos
+              Mark all as favorites
             </button>
 
             <button className="btn-reset-all" onClick={resetAllFavorites}>
-              Resetear todos los favoritos
+              Reset all favorites
             </button>
           </div>
         </section>
@@ -207,7 +207,7 @@ const handleDeleteWithConfirmation = (contactId, contactName) => {
               className="back-button" 
               onClick={() => setSelectedContact(null)}
             >
-             ❌ Limpiar
+             ❌ Clean
             </button>
             <ContactCard 
               contact={selectedContact}
