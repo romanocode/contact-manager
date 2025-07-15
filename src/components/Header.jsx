@@ -19,11 +19,7 @@ export default function Header() {
       <p className="header-description">
         Save and organize your contacts easily
       </p>
-      
-      {/* Botón para agregar contacto */}
-      <button onClick={handleAddContact} className="add-button">
-        ➕ Add Contact
-      </button>
+    
       
 
       {/* Estilos CSS simples */}
@@ -31,7 +27,6 @@ export default function Header() {
         .header {
           background: linear-gradient(135deg, #00CC8F, #00A876);
           color: white;
-          padding: 10px 10px;
           text-align: center;
           box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
         }
@@ -54,28 +49,7 @@ export default function Header() {
           opacity: 0.9;
         }
 
-        .add-button {
-          background: white;
-          color: #00CC8F;
-          border: none;
-          padding: 10px 20px;
-          font-size: 1rem;
-          font-weight: bold;
-          border-radius: 25px;
-          cursor: pointer;
-          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-          transition: all 0.3s ease;
-        }
-
-        .add-button:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-          background: #f8f9fa;
-        }
-
-        .add-button:active {
-          transform: translateY(0);
-        }
+        
 
         /* Para pantallas pequeñas */
         @media (max-width: 768px) {

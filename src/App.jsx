@@ -1,4 +1,5 @@
 import { useState } from "react";
+import ContactForm from "./components/ContactForm";
 import ContactCard from "./components/ContactCard";
 import ContactList from "./components/ContactList";
 import Footer from "./components/Footer";
@@ -10,6 +11,8 @@ import "./index.css"
 export default function App() {
   const [selectedContact, setSelectedContact] = useState(null);
   const [showOnlyFavorites, setShowOnlyFavorites] = useState(false);
+
+  
 
   const [contacts, setContacts] = useState([
     {
@@ -124,10 +127,20 @@ export default function App() {
     }
   };
 
+  function handleAddContact(newContact) {
+    const updatedContacts = [...contacts, newContact]; // Spread operator
+    setContacts(updatedContacts);
+  }
+  
+
   return (
     <div>
       <Header />
       <main>
+
+        <ContactForm onAddContact={handleAddContact} />
+    
+
         <section className="favorites-filter">
           <label>
             <h3>Favorite Contacts</h3>
@@ -162,7 +175,7 @@ export default function App() {
                 onClick={() => handleSelectContact(contact)}
                 className="contact-btn"
               >
-                {contact.name} ({contact.id})
+                {contact.name}
               </button>
             </div>
           ))}
