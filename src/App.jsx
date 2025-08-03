@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from './components/Header.jsx';
 import SearchFilters from './components/SearchFilters.jsx';
 import StatsPanel from './components/StatsPanel.jsx';
@@ -6,9 +6,11 @@ import ContactsList from './components/ContactsList.jsx';
 import ContactDetails from './components/ContactDetails.jsx';
 import ContactModal from './components/ContactModal.jsx';
 import Footer from './components/Footer.jsx';
+import { initializeApp } from './utils/initializer';
+import SplashScreen from './components/SplashScreen';
 import './index.css';
 
-const App = () => {
+function  App() {
   const [contacts, setContacts] = useState([
     {
       id: 1,
@@ -51,6 +53,26 @@ const App = () => {
       avatar: "LD"
     }
   ]);
+
+  // Estado para controlar si la app está inicializando
+  const [isInitializing, setIsInitializing] = useState(true);
+  const [initError, setInitError] = useState(null);
+
+  // useEffect se ejecuta al montar el componente
+  useEffect(() => {
+    async function startApp() {
+      try {
+        // Simula inicialización de 3 segundos
+        const result = await initializeApp(3000);
+        setIsInitializing(result); // result será false después de 3 segundos
+      } catch (error) {
+        setInitError(error.message);
+        setIsInitializing(false);
+      }
+    }
+    
+    startApp();
+  }, []);
 
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('todos');
@@ -142,7 +164,21 @@ const App = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
+
+    <div className="App">
+      {/* Mostrar splash screen mientras inicializa */}
+      {isInitializing && (
+        <SplashScreen 
+          isLoading={isInitializing} 
+          error={initError} 
+        />
+      )}
+      
+      {/* Contenido principal - solo se muestra cuando termina la inicialización */}
+      {!isInitializing && (
+        <div>
+          
+          <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
       <Header onAddContact={() => setShowModal(true)} contacts={contacts} />
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
@@ -166,7 +202,7 @@ const App = () => {
         {/* Horizontal Layout: Contacts List + Details */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mt-6">
           {/* Left: Contacts List */}
-          <div className="lg:col-span-5">
+          <div className="lg:col-span-7">
             <ContactsList
               filteredContacts={filteredContacts}
               selectedContact={selectedContact}
@@ -177,7 +213,7 @@ const App = () => {
           </div>
 
           {/* Right: Contact Details */}
-          <div className="lg:col-span-7">
+          <div className="lg:col-span-5">
             <ContactDetails
               selectedContact={selectedContact}
               categories={categories}
@@ -201,7 +237,12 @@ const App = () => {
 
       <Footer />
     </div>
+        </div>
+      )}
+    </div>
   );
 };
+
+
 
 export default App;
