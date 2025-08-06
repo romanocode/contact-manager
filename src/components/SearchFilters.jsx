@@ -8,13 +8,19 @@ const SearchFilters = ({
   setSelectedCategory,
   showFavoritesOnly,
   setShowFavoritesOnly,
-  filteredContacts,
-  categories
+  categories,
+  contactsCount = 0 // Número total de contactos filtrados
 }) => {
   const getIcon = (iconName) => {
     const icons = { Users, Heart, Building };
     return icons[iconName] || Users;
   };
+
+  // Agregar categoría "Todos" al inicio
+  const allCategories = [
+    { id: 'all', name: 'Todos', icon: 'Users', color: 'bg-indigo-500' },
+    ...categories
+  ];
 
   return (
     <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-sm border border-gray-200/50 p-4">
@@ -22,7 +28,7 @@ const SearchFilters = ({
         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
         <input
           type="text"
-          placeholder="Search contacts..."
+          placeholder="Buscar contactos..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all bg-gray-50/50"
@@ -31,7 +37,7 @@ const SearchFilters = ({
 
       {/* Category Filters */}
       <div className="flex flex-wrap gap-2 mb-4">
-        {categories.map(category => {
+        {allCategories.map(category => {
           const IconComponent = getIcon(category.icon);
           return (
             <button
@@ -52,16 +58,18 @@ const SearchFilters = ({
 
       {/* Favorites Toggle */}
       <div className="flex items-center justify-between">
-        <label className="flex items-center">
+        <label className="flex items-center cursor-pointer">
           <input
             type="checkbox"
             checked={showFavoritesOnly}
             onChange={(e) => setShowFavoritesOnly(e.target.checked)}
             className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
           />
-          <span className="ml-2 text-sm text-gray-700">Show favorites</span>
+          <span className="ml-2 text-sm text-gray-700">Mostrar solo favoritos</span>
         </label>
-        <span className="text-sm text-gray-500">{filteredContacts.length} contacts</span>
+        <span className="text-sm text-gray-500">
+          {contactsCount} contacto{contactsCount !== 1 ? 's' : ''}
+        </span>
       </div>
     </div>
   );

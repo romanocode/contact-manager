@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Phone, Plus, Upload, Download, Menu, X, Users, Star, Building, ChevronDown, ChevronUp } from 'lucide-react';
 
-const Header = ({ onAddContact, contacts }) => {
+const Header = ({ onAddContact, contactsCount = 0, favoritesCount = 0, workCount = 0 }) => {
   const [panelOpen, setPanelOpen] = useState(false);
 
   return (
@@ -37,19 +37,19 @@ const Header = ({ onAddContact, contacts }) => {
             {/* Stats */}
             <div className="grid grid-cols-3 gap-3 mb-4">
               <div className="text-center p-3 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl">
-                <p className="text-lg font-bold text-indigo-600">{contacts.length}</p>
+                <p className="text-lg font-bold text-indigo-600">{contactsCount}</p>
                 <p className="text-xs text-gray-600">Total</p>
               </div>
               <div className="text-center p-3 bg-gradient-to-r from-emerald-50 to-green-50 rounded-xl">
-                <p className="text-lg font-bold text-emerald-600">{contacts.filter(c => c.favorite).length}</p>
+                <p className="text-lg font-bold text-emerald-600">{favoritesCount}</p>
                 <p className="text-xs text-gray-600">Favorites</p>
               </div>
               <div className="text-center p-3 bg-gradient-to-r from-rose-50 to-pink-50 rounded-xl">
-                <p className="text-lg font-bold text-rose-600">{contacts.filter(c => c.category === 'trabajo').length}</p>
+                <p className="text-lg font-bold text-rose-600">{workCount}</p>
                 <p className="text-xs text-gray-600">Work</p>
               </div>
             </div>
-            
+                     
             {/* Action Buttons */}
             <div className="flex gap-2">
               <button className="flex-1 p-2 text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200 transition-all flex items-center justify-center gap-2">
@@ -61,7 +61,7 @@ const Header = ({ onAddContact, contacts }) => {
                 Export
               </button>
             </div>
-            
+                     
             <button
               onClick={() => {
                 onAddContact();
