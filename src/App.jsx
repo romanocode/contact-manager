@@ -6,138 +6,122 @@ import ContactsList from './components/ContactsList.jsx';
 import ContactDetails from './components/ContactDetails.jsx';
 import ContactModal from './components/ContactModal.jsx';
 import Footer from './components/Footer.jsx';
-import { initializeApp } from './utils/initializer';
-import SplashScreen from './components/SplashScreen';
+import SplashScreen from './components/SplashScreen.jsx';
 import './index.css';
+import { initializeApp } from './utils/initializer';
+import {
+  fetchContacts,
+  createContact,
+  updateContact,
+  deleteContact as deleteContactAPI
+} from './services/contactService';
 
-function  App() {
-  const [contacts, setContacts] = useState([
-    {
-      id: 1,
-      name: "Ana García",
-      phone: "+1 (555) 123-4567",
-      email: "ana.garcia@company.com",
-      address: "123 Business Ave, NYC",
-      category: "familia",
-      favorite: true,
-      avatar: "AG"
-    },
-    {
-      id: 2,
-      name: "Carlos Rodríguez",
-      phone: "+1 (555) 987-6543",
-      email: "carlos.rodriguez@enterprise.com", 
-      address: "456 Corporate Blvd, LA",
-      category: "trabajo",
-      favorite: false,
-      avatar: "CR"
-    },
-    {
-      id: 3,
-      name: "María López",
-      phone: "+1 (555) 456-7890",
-      email: "maria.lopez@business.com",
-      address: "789 Professional St, Chicago", 
-      category: "amigos",
-      favorite: true,
-      avatar: "ML"
-    },
-    {
-      id: 4,
-      name: "Luis Díaz",
-      phone: "+1 (555) 321-9876",
-      email: "luis@company.com",
-      address: "321 Executive Way, Miami",
-      category: "trabajo",
-      favorite: false,
-      avatar: "LD"
-    }
-  ]);
-
-  // Estado para controlar si la app está inicializando
+function App() {
+  // Estado de inicialización
   const [isInitializing, setIsInitializing] = useState(true);
   const [initError, setInitError] = useState(null);
 
-  // useEffect se ejecuta al montar el componente
-  useEffect(() => {
-    async function startApp() {
-      try {
-        // Simula inicialización de 3 segundos
-        const result = await initializeApp(3000);
-        setIsInitializing(result); // result será false después de 3 segundos
-      } catch (error) {
-        setInitError(error.message);
-        setIsInitializing(false);
-      }
-    }
-    
-    startApp();
-  }, []);
-
+  // Datos de contactos y UI
+  const [contacts, setContacts] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('todos');
-  const [showModal, setShowModal] = useState(false);
-  const [editingContact, setEditingContact] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState('all');
   const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
   const [selectedContact, setSelectedContact] = useState(null);
+  const [contactsStats, setContactsStats] = useState({ total: 0, favorites: 0, work: 0 });
 
+  // Modal y formulario
+  const [showModal, setShowModal] = useState(false);
+  const [editingContact, setEditingContact] = useState(null);
   const [formData, setFormData] = useState({
-    name: '', phone: '', email: '', address: '', category: 'trabajo'
+    name: '',
+    phone: '',
+    email: '',
+    address: '',
+    category: 'trabajo'
   });
 
   const categories = [
-    { id: 'todos', name: 'All', color: 'bg-gradient-to-r from-slate-600 to-slate-700', icon: 'Users' },
     { id: 'familia', name: 'Family', color: 'bg-gradient-to-r from-rose-500 to-pink-600', icon: 'Heart' },
     { id: 'amigos', name: 'Friends', color: 'bg-gradient-to-r from-emerald-500 to-green-600', icon: 'Users' },
     { id: 'trabajo', name: 'Work', color: 'bg-gradient-to-r from-indigo-500 to-blue-600', icon: 'Building' }
   ];
 
-  // Funciones de utilidad
-  const getCategoryColor = (category) => categories.find(c => c.id === category)?.color || 'bg-gradient-to-r from-slate-600 to-slate-700';
-  const generateAvatar = (name) => name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+  const getCategoryColor = (category) =>
+    categories.find(c => c.id === category)?.color || 'bg-gradient-to-r from-slate-600 to-slate-700';
 
-  const filteredContacts = contacts.filter(contact => {
-    const matchesSearch = contact.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         contact.phone.includes(searchTerm) ||
-                         contact.email.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = selectedCategory === 'todos' || contact.category === selectedCategory;
-    const matchesFavorites = !showFavoritesOnly || contact.favorite;
-    
-    return matchesSearch && matchesCategory && matchesFavorites;
-  });
+  // 🔁 Cargar contactos desde API
+  useEffect(() => {
+    async function loadContacts() {
+      try {
+        const data = await fetchContacts();
+        setContacts(data);
 
-  // Handlers
-  const handleSubmit = (e) => {
+        // Actualizar estadísticas
+        setContactsStats({
+          total: data.length,
+          favorites: data.filter(c => c.favorite).length,
+          work: data.filter(c => c.category === 'trabajo').length
+        });
+      } catch (error) {
+        console.error('❌ Error al cargar contactos:', error.message);
+      }
+    }
+
+    if (!isInitializing) {
+      loadContacts();
+    }
+  }, [isInitializing]);
+
+  // 🟡 Simular pantalla de carga
+  useEffect(() => {
+    async function startApp() {
+      try {
+        const result = await initializeApp(3000);
+        setIsInitializing(result);
+      } catch (error) {
+        setInitError(error.message);
+        setIsInitializing(false);
+      }
+    }
+    startApp();
+  }, []);
+
+  // 🔵 Crear o editar contacto
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.name || !formData.phone || !formData.email) {
-      alert('Please complete all required fields');
+      alert('Por favor, completa todos los campos obligatorios.');
       return;
     }
-    
-    if (editingContact) {
-      setContacts(contacts.map(contact => 
-        contact.id === editingContact.id 
-          ? { ...contact, ...formData, avatar: generateAvatar(formData.name) }
-          : contact
-      ));
-    } else {
-      const newContact = {
-        id: Date.now(),
-        ...formData,
-        favorite: false,
-        avatar: generateAvatar(formData.name)
-      };
-      setContacts([...contacts, newContact]);
+
+    try {
+      if (editingContact) {
+        const updated = await updateContact(editingContact.id, formData);
+        setContacts(prev =>
+          prev.map(c => (c.id === updated.id ? updated : c))
+        );
+        setSelectedContact(updated);
+      } else {
+        const created = await createContact(formData);
+        setContacts(prev => [...prev, created]);
+        setSelectedContact(created);
+      }
+    } catch (error) {
+      console.error('❌ Error al guardar:', error);
+      alert('Hubo un error al guardar el contacto.');
+    } finally {
+      resetForm();
     }
-    resetForm();
   };
 
+  // 🧹 Resetear formulario y cerrar modal
   const resetForm = () => {
     setFormData({ name: '', phone: '', email: '', address: '', category: 'trabajo' });
     setEditingContact(null);
     setShowModal(false);
   };
 
+  // ✏️ Editar contacto
   const handleEdit = (contact) => {
     setFormData({
       name: contact.name,
@@ -150,99 +134,106 @@ function  App() {
     setShowModal(true);
   };
 
-  const handleDelete = (id) => {
-    if (window.confirm('Are you sure you want to delete this contact?')) {
-      setContacts(contacts.filter(contact => contact.id !== id));
+  // 🗑️ Eliminar contacto
+  const handleDelete = async (id) => {
+    const confirmed = window.confirm('¿Estás seguro de que deseas eliminar este contacto?');
+    if (!confirmed) return;
+
+    try {
+      await deleteContactAPI(id);
+      setContacts(prev => prev.filter(c => c.id !== id));
       setSelectedContact(null);
+    } catch (error) {
+      console.error('❌ Error al eliminar:', error.message);
+      alert('Hubo un error al eliminar el contacto.');
     }
   };
 
+  // ⭐ Marcar como favorito (modo local)
   const toggleFavorite = (id) => {
-    setContacts(contacts.map(contact => 
-      contact.id === id ? { ...contact, favorite: !contact.favorite } : contact
-    ));
+    setContacts(prev =>
+      prev.map(c => c.id === id ? { ...c, favorite: !c.favorite } : c)
+    );
   };
 
+  // 🎯 Aplicar filtros
+  const filteredContacts = contacts.filter(c => {
+    const matchSearch = c.name.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchCategory = selectedCategory === 'all' || c.category === selectedCategory;
+    const matchFavorite = !showFavoritesOnly || c.favorite;
+    return matchSearch && matchCategory && matchFavorite;
+  });
+
   return (
-
     <div className="App">
-      {/* Mostrar splash screen mientras inicializa */}
-      {isInitializing && (
-        <SplashScreen 
-          isLoading={isInitializing} 
-          error={initError} 
-        />
-      )}
-      
-      {/* Contenido principal - solo se muestra cuando termina la inicialización */}
-      {!isInitializing && (
-        <div>
-          
-          <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
-      <Header onAddContact={() => setShowModal(true)} contacts={contacts} />
-      
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        {/* Search and Filters - Full Width */}
-        <SearchFilters
-          searchTerm={searchTerm}
-          setSearchTerm={setSearchTerm}
-          selectedCategory={selectedCategory}
-          setSelectedCategory={setSelectedCategory}
-          showFavoritesOnly={showFavoritesOnly}
-          setShowFavoritesOnly={setShowFavoritesOnly}
-          filteredContacts={filteredContacts}
-          categories={categories}
-        />
-        
-        {/* Stats Panel - Full Width */}
-        <div className="mt-4">
-          <StatsPanel contacts={contacts} />
-        </div>
+      {isInitializing ? (
+        <SplashScreen isLoading={isInitializing} error={initError} />
+      ) : (
+        <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
+          <Header
+            onAddContact={() => setShowModal(true)}
+            contactsCount={contactsStats.total}
+            favoritesCount={contactsStats.favorites}
+            workCount={contactsStats.work}
+          />
 
-        {/* Horizontal Layout: Contacts List + Details */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mt-6">
-          {/* Left: Contacts List */}
-          <div className="lg:col-span-7">
-            <ContactsList
-              filteredContacts={filteredContacts}
-              selectedContact={selectedContact}
-              setSelectedContact={setSelectedContact}
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+            <SearchFilters
+              searchTerm={searchTerm}
+              setSearchTerm={setSearchTerm}
+              selectedCategory={selectedCategory}
+              setSelectedCategory={setSelectedCategory}
+              showFavoritesOnly={showFavoritesOnly}
+              setShowFavoritesOnly={setShowFavoritesOnly}
               categories={categories}
-              getCategoryColor={getCategoryColor}
+              contactsCount={contactsStats.total}
             />
+
+            <div className="mt-4">
+              <StatsPanel
+                contactsCount={contactsStats.total}
+                favoritesCount={contactsStats.favorites}
+              />
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mt-6">
+              <div className="lg:col-span-7">
+                <ContactsList
+                  contacts={filteredContacts}
+                  selectedContact={selectedContact}
+                  setSelectedContact={setSelectedContact}
+                  categories={categories}
+                  getCategoryColor={getCategoryColor}
+                />
+              </div>
+
+              <div className="lg:col-span-5">
+                <ContactDetails
+                  selectedContact={selectedContact}
+                  categories={categories}
+                  getCategoryColor={getCategoryColor}
+                  onEdit={handleEdit}
+                  onDelete={handleDelete}
+                  onToggleFavorite={toggleFavorite}
+                />
+              </div>
+            </div>
           </div>
 
-          {/* Right: Contact Details */}
-          <div className="lg:col-span-5">
-            <ContactDetails
-              selectedContact={selectedContact}
-              categories={categories}
-              getCategoryColor={getCategoryColor}
-              onEdit={handleEdit}
-              onDelete={handleDelete}
-              onToggleFavorite={toggleFavorite}
-            />
-          </div>
-        </div>
-      </div>
+          <ContactModal
+            showModal={showModal}
+            editingContact={editingContact}
+            formData={formData}
+            setFormData={setFormData}
+            onSubmit={handleSubmit}
+            onClose={resetForm}
+          />
 
-      <ContactModal
-        showModal={showModal}
-        editingContact={editingContact}
-        formData={formData}
-        setFormData={setFormData}
-        onSubmit={handleSubmit}
-        onClose={resetForm}
-      />
-
-      <Footer />
-    </div>
+          <Footer />
         </div>
       )}
     </div>
   );
-};
-
-
+}
 
 export default App;
